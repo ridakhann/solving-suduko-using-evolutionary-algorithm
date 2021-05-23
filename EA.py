@@ -208,9 +208,9 @@ class Evolution:
             self.population.population.append((offspring1, offspring1.fitness))
             self.population.population.append((offspring2, offspring2.fitness))
         new_pop = []
-        # new_pop = self.truncation(self.populationSize)
-        for i in range(self.populationSize):
-            new_pop.append(self.binaryTournament())
+        new_pop = self.truncation(self.populationSize)
+        # for i in range(self.populationSize):
+        #     new_pop.append(self.binaryTournament())
         return new_pop
 
     def getBest(self):
@@ -255,17 +255,18 @@ class Evolution:
         lastBest = 100
         bestKnown = [[], 100, 0]
         avg = []
+        best = []
         generations = []
         localCounter = 0
 
         for i in range(self.numGenerations):
             generations.append(i)
             self.population.population = self.generation()
-            # if localCounter > 50:
-            #     self.superMutation()
-            # avg.append(self.getAverage())
-            # best.append(self.getBest())
+            if localCounter > 50:
+                self.superMutation()
+            avg.append(self.getAverage())
             bestInd, bestFit = self.bestPopulation()
+            best.append(bestFit)
             if bestFit < bestKnown[1]:
                 bestKnown[0], bestKnown[1], bestKnown[2] = bestInd, bestFit, i
             print("Generation #", i, "Best fit: ", bestFit)
@@ -273,8 +274,9 @@ class Evolution:
             #     print("Generation "+str(i) + " " +
             #           str(self.getBest()) + " Average: "+str(avg[i]))
         # print(a.grid)
-        # self.best = best
-        # self.average = avg
+        # print(best)
+        self.best = best
+        self.average = avg
         # print(min(best))
         if bestFit in range(lastBest-20, lastBest+20+1):
             localCounter += 1
