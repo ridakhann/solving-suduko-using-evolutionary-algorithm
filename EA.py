@@ -1,6 +1,7 @@
 from copy import deepcopy
 from random import random, shuffle, randint, sample, choice
 import numpy as np
+import random as random
 
 # global a
 
@@ -88,9 +89,9 @@ class Evolution:
         sums = 0
         normalized = []
         for i in range(self.populationSize):
-            sums += 1/(self.population.population[i].fitness)
+            sums += 1/(self.population.population[i][1])
         for i in range(self.populationSize-1):
-            normalized.append((1/self.population.population[i].fitness)/sums)
+            normalized.append((1/self.population.population[i][1])/sums)
         cumulative = normalized.copy()
         for i in range(1, len(normalized)):
             cumulative[i] = cumulative[i] + cumulative[i-1]
@@ -140,9 +141,9 @@ class Evolution:
 
     def parentSelection(self):
         selectedParents = []
-        selectedParents = self.truncation(2)
-        # for i in range(2):
-        #     selectedParents.append(self.fitnessProp())
+        # selectedParents = self.truncation(2)
+        for i in range(2):
+            selectedParents.append(self.randomSelection())
         return selectedParents
 
     def mutation(self, parent: Chromosome):
@@ -156,10 +157,16 @@ class Evolution:
         parent.fitnessCalculator()
         return parent
 
-    def superMutation(self, population, mutate_rate):
-        for indv in population:
-            if random() < mutate_rate:
-                self.mutation(indv)
+    def superMutation(self):
+        for indv in self.population.population:
+            self.mutation(indv)
+
+    def evaluate_pop(self):
+        lst = []
+        for individual in self.population.population:
+            individual[0].fitnessCalculator()
+            lst.append(individual[0].fitness)
+        return lst
 
     def crossover_individuals(self, parent1: Chromosome, parent2: Chromosome):
         crossover_point1 = randint(1, 8)
@@ -201,9 +208,9 @@ class Evolution:
             self.population.population.append((offspring1, offspring1.fitness))
             self.population.population.append((offspring2, offspring2.fitness))
         new_pop = []
-        new_pop = self.truncation(self.populationSize)
-        # for i in range(self.populationSize):
-        #     new_pop.append(self.fitnessProp())
+        # new_pop = self.truncation(self.populationSize)
+        for i in range(self.populationSize):
+            new_pop.append(self.binaryTournament())
         return new_pop
 
     def getBest(self):
@@ -222,20 +229,57 @@ class Evolution:
             sum += self.population.population[i][1]
         return sum/self.populationSize
 
+    # def evolve(self):
+    #     best = []
+    #     avg = []
+    #     generations = []
+    #     localCounter = 0
+    #     for i in range(self.numGenerations):
+    #         generations.append(i)
+    #         self.population.population = self.generation()
+    #         avg.append(self.getAverage())
+    #         best.append(self.getBest())
+    #         if (i % 100 == 0):
+    #             print("Generation "+str(i) + " " +
+    #                   str(self.getBest()) + " Average: "+str(avg[i]))
+    #     # print(a.grid)
+    #     self.best = best
+    #     self.average = avg
+    #     print(min(best))
+
+    def bestPopulation(self):
+        lst = self.evaluate_pop()
+        return sorted(zip(self.population.population, lst), key=lambda ind_fit: ind_fit[1])[0]
+
     def evolve(self):
-        best = []
+        lastBest = 100
+        bestKnown = [[], 100, 0]
         avg = []
         generations = []
         localCounter = 0
+
         for i in range(self.numGenerations):
             generations.append(i)
             self.population.population = self.generation()
-            avg.append(self.getAverage())
-            best.append(self.getBest())
-            if (i % 100 == 0):
-                print("Generation "+str(i) + " " +
-                      str(self.getBest()) + " Average: "+str(avg[i]))
+            # if localCounter > 50:
+            #     self.superMutation()
+            # avg.append(self.getAverage())
+            # best.append(self.getBest())
+            bestInd, bestFit = self.bestPopulation()
+            if bestFit < bestKnown[1]:
+                bestKnown[0], bestKnown[1], bestKnown[2] = bestInd, bestFit, i
+            print("Generation #", i, "Best fit: ", bestFit)
+            # if (i % 100 == 0):
+            #     print("Generation "+str(i) + " " +
+            #           str(self.getBest()) + " Average: "+str(avg[i]))
         # print(a.grid)
-        self.best = best
-        self.average = avg
-        print(min(best))
+        # self.best = best
+        # self.average = avg
+        # print(min(best))
+        if bestFit in range(lastBest-20, lastBest+20+1):
+            localCounter += 1
+        else:
+            lastBest = bestFit
+            localCounter = 0
+        print("\nBest found fitness: ", bestKnown[1])
+        return bestInd

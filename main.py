@@ -49,13 +49,13 @@ def process_file(file_path):
     # print(grid)
 
 
-process_file("grid1.txt")
+process_file("grid3.txt")
 
 numIterations = 1
-numGenerations = 10000
-populationSize = 100
+numGenerations = 5000
+populationSize = 500
 numOfOffsprings = 80
-mutationRate = 0.5
+mutationRate = 0.6
 b = []
 a = []
 # p = Population(4, grid, changeable)
@@ -88,13 +88,15 @@ for i in range(numIterations):
     population.createPopulation(populationSize)
     evo = Evolution(population, mutationRate,
                     numGenerations, numIterations, numOfOffsprings)
-    evo.evolve()
+    solution = evo.evolve()
     b.append(evo.best)
     a.append(evo.average)
+    for i in solution:
+        print(i)
 best = averageBSF(b)
 aver = averageAFSF(a)
-print(best[-1])
-print(aver[-1])
+# print(best[-1])
+# print(aver[-1])
 generations = range(numGenerations)
 plt.plot(generations, aver)
 plt.plot(generations, best)
@@ -103,4 +105,3 @@ plt.title('Fitness Vs Generations')
 plt.xlabel('Generations')
 plt.ylabel('Fitness')
 plt.show()
-
