@@ -284,4 +284,5 @@ class Evolution:
             lastBest = bestFit
             localCounter = 0
         print("\nBest found fitness: ", bestKnown[1])
+        #print(bestInd)
         return bestInd

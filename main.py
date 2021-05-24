@@ -1,8 +1,10 @@
+import pygame
 from random import random, shuffle, randint, sample, choice
 from copy import deepcopy
 from time import time
 import sys
 from EA import Chromosome, Population, Evolution
+from sudoko import *
 from matplotlib import pyplot as plt
 
 grid = []   # Holds rows of base grid
@@ -43,10 +45,7 @@ def process_file(file_path):
 
             grid.append(current_row)
             changeable.append(current_changeable)
-    # for i in grid:
-    #     print(i)
-    # print(changeable)
-    # print(grid)
+    #print(grid)
 
 
 process_file("grid2.txt")
@@ -84,7 +83,12 @@ def averageAFSF(avg):
 
 
 fitness = []
-
+win = pygame.display.set_mode((540,600))
+pygame.display.set_caption("Soduko Auto Solve")
+board = Grid(9, 9, 540, 540, win,grid)
+redraw_window(win, board)
+pygame.display.update()
+#print(grid)
 for i in range(numIterations):
     population = Population(populationSize, grid, changeable)
     population.createPopulation(populationSize)
@@ -94,8 +98,11 @@ for i in range(numIterations):
     b.append(evo.best)
     a.append(evo.average)
     fitness.append(solution[1])
-    for i in solution[0].grid:
-        print(i)
+    board = Grid(9, 9, 540, 540, win,solution[0].grid)
+    redraw_window(win, board)
+    pygame.display.update()
+
+print(board.board)
 best = averageBSF(b)
 aver = averageAFSF(a)
 generations = range(numGenerations)
@@ -106,3 +113,4 @@ plt.title('Fitness Vs Generations')
 plt.xlabel('Generations')
 plt.ylabel('Fitness')
 plt.show()
+pygame.quit()
