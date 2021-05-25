@@ -89,29 +89,32 @@ pygame.display.set_caption("Sudoku Visualizer")
 board = Grid(9, 9, 540, 540, win, grid)
 redraw_window(win, board, grid)
 pygame.display.update()
+
+generations = []
 timeList = []
 for i in range(numIterations):
-    start = time.time()
+
     population = Population(populationSize, grid, changeable)
     population.createPopulation(populationSize)
     evo = Evolution(population, mutationRate,
                     numGenerations, numIterations, numOfOffsprings)
-    solution, gen = evo.evolve(grid)
-    timeEnd = time.time() - start
-    timeList.append(timeEnd)
+    solution, timeend = evo.evolve(grid)
+    timeList.append(timeend)
     b.append(evo.best)
     a.append(evo.average)
     fitness.append(solution[1])
     print(solution[1])
 
+
 print(timeList)
-averageTime = sum(timeList)
+# averageTime = sum(timeList)
+
 best = averageBSF(b)
 aver = averageAFSF(a)
-# generations = range(gen)
-# print(len(aver), len(best), len(generations))
-plt.plot(gen, aver)
-plt.plot(gen, best)
+generations = range(numGenerations)
+# print(len(aver), len(best), len(gen))
+plt.plot(generations, aver)
+plt.plot(generations, best)
 plt.legend(["Average Fitness", "Best Fitness"])
 plt.title('Fitness Vs Generations')
 plt.xlabel('Generations')

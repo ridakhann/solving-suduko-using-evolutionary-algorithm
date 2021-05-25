@@ -2,6 +2,7 @@ from copy import deepcopy
 from random import random, shuffle, randint, sample, choice
 import numpy as np
 import random as random
+import time as time
 from sudoko import *
 # global a
 
@@ -255,11 +256,13 @@ class Evolution:
         lastBest = 100
         bestKnown = [[], 100, 0]
         avg = []
+        # timeList = []
         best = []
         generations = []
         localCounter = 0
-        count = 0
+        timeEnd = 0
         win = pygame.display.set_mode((540, 600))
+        start = time.time()
         for i in range(self.numGenerations):
             count = i
             generations.append(i)
@@ -276,7 +279,8 @@ class Evolution:
             redraw_window(win, board, grid)
             pygame.display.update()
             if bestFit == 0:
-                break
+                timeEnd = time.time() - start
+                # timeList.append(timeEnd)
             # if (i % 100 == 0):
             #     print("Generation "+str(i) + " " +
             #           str(self.getBest()) + " Average: "+str(avg[i]))
@@ -292,4 +296,4 @@ class Evolution:
             localCounter = 0
         print("\nBest found fitness: ", bestKnown[1])
         # print(bestInd)
-        return bestInd, generations
+        return bestInd, timeEnd
