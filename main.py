@@ -45,10 +45,10 @@ def process_file(file_path):
 
             grid.append(current_row)
             changeable.append(current_changeable)
-    #print(grid)
+    # print(grid)
 
 
-process_file("grid2.txt")
+process_file("grid1.txt")
 
 numIterations = 2
 numGenerations = 100
@@ -83,23 +83,27 @@ def averageAFSF(avg):
 
 
 fitness = []
-win = pygame.display.set_mode((540,600))
-pygame.display.set_caption("Soduko Auto Solve")
-board = Grid(9, 9, 540, 540, win,grid)
+win = pygame.display.set_mode((540, 600))
+pygame.display.set_caption("Sudoku Visualizer")
+board = Grid(9, 9, 540, 540, win, grid)
 redraw_window(win, board, grid)
 pygame.display.update()
-#print(grid)
+timeList = []
 for i in range(numIterations):
+    start = time.time()
     population = Population(populationSize, grid, changeable)
     population.createPopulation(populationSize)
     evo = Evolution(population, mutationRate,
                     numGenerations, numIterations, numOfOffsprings)
     solution = evo.evolve(grid)
+    timeEnd = time.time() - start
+    timeList.append(timeEnd)
     b.append(evo.best)
     a.append(evo.average)
     fitness.append(solution[1])
-    
+    print(solution[1])
 
+print(timeList)
 best = averageBSF(b)
 aver = averageAFSF(a)
 generations = range(numGenerations)
