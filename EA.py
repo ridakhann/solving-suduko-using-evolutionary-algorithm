@@ -230,23 +230,6 @@ class Evolution:
             sum += self.population.population[i][1]
         return sum/self.populationSize
 
-    # def evolve(self):
-    #     best = []
-    #     avg = []
-    #     generations = []
-    #     localCounter = 0
-    #     for i in range(self.numGenerations):
-    #         generations.append(i)
-    #         self.population.population = self.generation()
-    #         avg.append(self.getAverage())
-    #         best.append(self.getBest())
-    #         if (i % 100 == 0):
-    #             print("Generation "+str(i) + " " +
-    #                   str(self.getBest()) + " Average: "+str(avg[i]))
-    #     # print(a.grid)
-    #     self.best = best
-    #     self.average = avg
-    #     print(min(best))
 
     def bestPopulation(self):
         lst = self.evaluate_pop()
@@ -256,7 +239,6 @@ class Evolution:
         lastBest = 100
         bestKnown = [[], 100, 0]
         avg = []
-        # timeList = []
         best = []
         generations = []
         localCounter = 0
@@ -280,20 +262,14 @@ class Evolution:
             pygame.display.update()
             if bestFit == 0:
                 timeEnd = time.time() - start
-                # timeList.append(timeEnd)
-            # if (i % 100 == 0):
-            #     print("Generation "+str(i) + " " +
-            #           str(self.getBest()) + " Average: "+str(avg[i]))
-        # print(a.grid)
-        # print(best)
+        if timeEnd == 0:
+            timeEnd = time.time() - start
         self.best = best
         self.average = avg
-        # print(min(best))
         if bestFit in range(lastBest-20, lastBest+20+1):
             localCounter += 1
         else:
             lastBest = bestFit
             localCounter = 0
         print("\nBest found fitness: ", bestKnown[1])
-        # print(bestInd)
         return bestInd, timeEnd

@@ -49,7 +49,7 @@ def process_file(file_path):
     # print(grid)
 
 
-process_file("grid1.txt")
+process_file("grid2.txt")
 
 numIterations = 2
 numGenerations = 100
@@ -58,9 +58,6 @@ numOfOffsprings = 100
 mutationRate = 0.6
 b = []
 a = []
-# p = Population(4, grid, changeable)
-# p.createPopulation(4)
-# print(p.population)
 
 
 def averageBSF(best):
