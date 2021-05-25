@@ -86,7 +86,7 @@ fitness = []
 win = pygame.display.set_mode((540,600))
 pygame.display.set_caption("Soduko Auto Solve")
 board = Grid(9, 9, 540, 540, win,grid)
-redraw_window(win, board)
+redraw_window(win, board, grid)
 pygame.display.update()
 #print(grid)
 for i in range(numIterations):
@@ -94,13 +94,12 @@ for i in range(numIterations):
     population.createPopulation(populationSize)
     evo = Evolution(population, mutationRate,
                     numGenerations, numIterations, numOfOffsprings)
-    solution = evo.evolve()
+    solution = evo.evolve(grid)
     b.append(evo.best)
     a.append(evo.average)
     fitness.append(solution[1])
     
 
-print(board.board)
 best = averageBSF(b)
 aver = averageAFSF(a)
 generations = range(numGenerations)

@@ -41,7 +41,7 @@ class Grid:
         row, col = self.selected
         self.cubes.set_temp(val)
 
-    def draw(self):
+    def draw(self,grid):
         # Drawing Grid Lines
         gap = self.width / 9
         for i in range(self.rows+1):
@@ -55,7 +55,10 @@ class Grid:
         # Drawing Cubes
         for i in range(self.rows):
             for j in range(self.cols):
-                self.cubes[i][j].draw(self.win)
+                if grid[i][j] == 0 or grid[i][j] == '0':
+                    self.cubes[i][j].draw(self.win,"red")
+                else:
+                    self.cubes[i][j].draw(self.win,"black")
 
     def select(self, row, col):
         # Reset all other
@@ -151,7 +154,7 @@ class Cube:
         self.height = height
         self.selected = False
 
-    def draw(self, win):
+    def draw(self, win, color):
         fnt = pygame.font.SysFont("comicsans", 40)
 
         gap = self.width / 9
@@ -159,14 +162,20 @@ class Cube:
         y = self.row * gap
 
         if self.temp != 0 and self.value == 0:
-            text = fnt.render(str(self.temp), 1, (128,128,128))
+            text = fnt.render(str(self.temp), 1, (255,0,0))
             win.blit(text, (x+5, y+5))
             
-        elif not(self.value == 0):
+        elif not(self.value == 0) and color == 'red':
+
             text = fnt.render(str(self.value), 1, (0, 0, 0))
             win.blit(text, (x + (gap/2 - text.get_width()/2), y + (gap/2 - text.get_height()/2)))
+
+        elif not(self.value == 0) and color == 'black':
+
+            text = fnt.render(str(self.value), 1, (255, 0, 0))
+            win.blit(text, (x + (gap/2 - text.get_width()/2), y + (gap/2 - text.get_height()/2)))
             
-        if self.selected:
+        if self.value == 0:
             pygame.draw.rect(win, (255,0,0), (x,y, gap ,gap), 3)
             
     def draw_change(self, win, g=True):
@@ -224,11 +233,11 @@ def valid(bo, num, pos):
     return True
 
 
-def redraw_window(win, board):
+def redraw_window(win, board, grid):
     win.fill((255,255,255))
     # Draw time
     fnt = pygame.font.SysFont("comicsans", 40)
-    board.draw()
+    board.draw(grid)
     
 
 
