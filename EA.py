@@ -251,15 +251,17 @@ class Evolution:
         lst = self.evaluate_pop()
         return sorted(zip(self.population.population, lst), key=lambda ind_fit: ind_fit[1])[0]
 
-    def evolve(self,grid):
+    def evolve(self, grid):
         lastBest = 100
         bestKnown = [[], 100, 0]
         avg = []
         best = []
         generations = []
         localCounter = 0
-        win = pygame.display.set_mode((540,600))
+        count = 0
+        win = pygame.display.set_mode((540, 600))
         for i in range(self.numGenerations):
+            count = i
             generations.append(i)
             self.population.population = self.generation()
             if localCounter > 50:
@@ -270,13 +272,15 @@ class Evolution:
             if bestFit < bestKnown[1]:
                 bestKnown[0], bestKnown[1], bestKnown[2] = bestInd, bestFit, i
             print("Generation #", i, "Best fit: ", bestFit)
-            board = Grid(9, 9, 540, 540, win,bestInd[0].grid)
-            redraw_window(win, board,grid)
+            board = Grid(9, 9, 540, 540, win, bestInd[0].grid)
+            redraw_window(win, board, grid)
             pygame.display.update()
+            if bestFit == 0:
+                break
             # if (i % 100 == 0):
             #     print("Generation "+str(i) + " " +
             #           str(self.getBest()) + " Average: "+str(avg[i]))
-        #print(a.grid)
+        # print(a.grid)
         # print(best)
         self.best = best
         self.average = avg
@@ -287,5 +291,5 @@ class Evolution:
             lastBest = bestFit
             localCounter = 0
         print("\nBest found fitness: ", bestKnown[1])
-        #print(bestInd)
-        return bestInd
+        # print(bestInd)
+        return bestInd, generations

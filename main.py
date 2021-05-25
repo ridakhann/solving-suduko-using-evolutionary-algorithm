@@ -1,3 +1,4 @@
+from itertools import count
 import pygame
 from random import random, shuffle, randint, sample, choice
 from copy import deepcopy
@@ -95,7 +96,7 @@ for i in range(numIterations):
     population.createPopulation(populationSize)
     evo = Evolution(population, mutationRate,
                     numGenerations, numIterations, numOfOffsprings)
-    solution = evo.evolve(grid)
+    solution, gen = evo.evolve(grid)
     timeEnd = time.time() - start
     timeList.append(timeEnd)
     b.append(evo.best)
@@ -104,11 +105,13 @@ for i in range(numIterations):
     print(solution[1])
 
 print(timeList)
+averageTime = sum(timeList)
 best = averageBSF(b)
 aver = averageAFSF(a)
-generations = range(numGenerations)
-plt.plot(generations, aver)
-plt.plot(generations, best)
+# generations = range(gen)
+# print(len(aver), len(best), len(generations))
+plt.plot(gen, aver)
+plt.plot(gen, best)
 plt.legend(["Average Fitness", "Best Fitness"])
 plt.title('Fitness Vs Generations')
 plt.xlabel('Generations')
