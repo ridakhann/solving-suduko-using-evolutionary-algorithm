@@ -50,7 +50,7 @@ def process_file(file_path):
 
 process_file("grid2.txt")
 
-numIterations = 20
+numIterations = 2
 numGenerations = 100
 populationSize = 500
 numOfOffsprings = 100
@@ -98,9 +98,7 @@ for i in range(numIterations):
     b.append(evo.best)
     a.append(evo.average)
     fitness.append(solution[1])
-    board = Grid(9, 9, 540, 540, win,solution[0].grid)
-    redraw_window(win, board)
-    pygame.display.update()
+    
 
 print(board.board)
 best = averageBSF(b)

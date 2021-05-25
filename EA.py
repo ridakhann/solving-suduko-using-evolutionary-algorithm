@@ -2,7 +2,7 @@ from copy import deepcopy
 from random import random, shuffle, randint, sample, choice
 import numpy as np
 import random as random
-
+from sudoko import *
 # global a
 
 
@@ -258,7 +258,7 @@ class Evolution:
         best = []
         generations = []
         localCounter = 0
-
+        win = pygame.display.set_mode((540,600))
         for i in range(self.numGenerations):
             generations.append(i)
             self.population.population = self.generation()
@@ -270,10 +270,13 @@ class Evolution:
             if bestFit < bestKnown[1]:
                 bestKnown[0], bestKnown[1], bestKnown[2] = bestInd, bestFit, i
             print("Generation #", i, "Best fit: ", bestFit)
+            board = Grid(9, 9, 540, 540, win,bestInd[0].grid)
+            redraw_window(win, board)
+            pygame.display.update()
             # if (i % 100 == 0):
             #     print("Generation "+str(i) + " " +
             #           str(self.getBest()) + " Average: "+str(avg[i]))
-        # print(a.grid)
+        #print(a.grid)
         # print(best)
         self.best = best
         self.average = avg
