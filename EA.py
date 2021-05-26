@@ -158,9 +158,25 @@ class Evolution:
         parent.fitnessCalculator()
         return parent
 
+    def mutation2(self, parent):
+        for n in range(9):
+            if len(parent[0].changeable[n]) > 1:
+                # Get the indices of the two elements to swap.
+                swap = sample(parent[0].changeable[n], 2)
+                # Swap their places.
+                parent[0].grid[n][swap[0]], parent[0].grid[n][swap[1]
+                                                              ] = parent[0].grid[n][swap[1]], parent[0].grid[n][swap[0]]
+        parent[0].fitnessCalculator()
+        parent = (parent[0], parent[0].fitness)
+        return parent
+
     def superMutation(self):
-        for indv in self.population.population:
-            self.mutation(indv)
+        sorted(self.population.population,
+               key=lambda x: x[1], reverse=False)
+        # population = []
+        for i in range(self.populationSize):
+            a = self.mutation2(self.population.population[i])
+            self.population.population[i] = a
 
     def evaluate_pop(self):
         lst = []
@@ -173,19 +189,6 @@ class Evolution:
         crossover_point1 = randint(1, 8)
         crossover_point2 = randint(1, 8)
         return deepcopy(parent1.grid[:crossover_point1]) + deepcopy(parent2.grid[crossover_point1:]), deepcopy(parent2.grid[:crossover_point2]) + deepcopy(parent1.grid[crossover_point2:])
-        # offspring1 = Chromosome(parent1.changeable, parent1.grid)
-        # offspring2 = Chromosome(parent1.changeable, parent1.grid)
-
-        # offspring1.grid = deepcopy(
-        #     parent1.grid[:crossover_point]) + deepcopy(parent2.grid[crossover_point:])
-
-        # offspring2.grid = deepcopy(
-        #     parent2.grid[:crossover_point]) + deepcopy(parent1.grid[crossover_point:])
-
-        # offspring1.fitnessCalculator()
-        # offspring2.fitnessCalculator()
-
-        # return offspring1, offspring2
 
     def generation(self):
         for i in range(self.numOffspring//2):
@@ -230,7 +233,6 @@ class Evolution:
             sum += self.population.population[i][1]
         return sum/self.populationSize
 
-
     def bestPopulation(self):
         lst = self.evaluate_pop()
         return sorted(zip(self.population.population, lst), key=lambda ind_fit: ind_fit[1])[0]
@@ -238,38 +240,65 @@ class Evolution:
     def evolve(self, grid):
         lastBest = 100
         bestKnown = [[], 100, 0]
-        avg = []
-        best = []
+        avg = [1000]
+        best = [1000]
         generations = []
         localCounter = 0
         timeEnd = 0
+        # bestIndividuals = set()
+        bestest = self.population.population[0]
         win = pygame.display.set_mode((540, 600))
         start = time.time()
         for i in range(self.numGenerations):
-            count = i
             generations.append(i)
             self.population.population = self.generation()
-            if localCounter > 50:
-                self.superMutation()
-            avg.append(self.getAverage())
+            self.getAverage()
+            # if av > avg[-1]:
+            #     avg.append(avg[-1])
+            # else:
+            #     avg.append(self.getAverage())
             bestInd, bestFit = self.bestPopulation()
-            best.append(bestFit)
+            if bestInd[0].fitness > bestest[0].fitness:
+                bestest = bestInd
+            # if bestFit < 10:
+            #     bestIndividuals.add(bestInd)
+            if bestFit > best[-1]:
+                best.append(best[-1])
+            else:
+                best.append(bestFit)
             if bestFit < bestKnown[1]:
                 bestKnown[0], bestKnown[1], bestKnown[2] = bestInd, bestFit, i
             print("Generation #", i, "Best fit: ", bestFit)
             board = Grid(9, 9, 540, 540, win, bestInd[0].grid)
             redraw_window(win, board, grid)
             pygame.display.update()
+            if localCounter > 150:
+                self.superMutation()
+                print("SUPER MUTATIONNNNNNNNNNNNNNNNNNNNNNNNNNN")
+                localCounter = 0
             if bestFit == 0:
                 timeEnd = time.time() - start
+            if lastBest == bestFit:
+                localCounter += 1
+            else:
+                lastBest = bestFit
+                localCounter = 0
+            if lastBest == bestFit:
+                localCounter += 1
+            else:
+                lastBest = bestFit
+                localCounter = 0
+            self.population.population.append(bestest)
         if timeEnd == 0:
             timeEnd = time.time() - start
+        best.remove(1000)
+        avg.remove(1000)
         self.best = best
         self.average = avg
-        if bestFit in range(lastBest-20, lastBest+20+1):
-            localCounter += 1
-        else:
-            lastBest = bestFit
-            localCounter = 0
+        # if lastBest == bestFit:
+        #     localCounter += 1
+        # else:
+        #     lastBest = bestFit
+        #     localCounter = 0
         print("\nBest found fitness: ", bestKnown[1])
         return bestInd, timeEnd

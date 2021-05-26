@@ -51,9 +51,9 @@ def process_file(file_path):
 
 process_file("grid2.txt")
 
-numIterations = 2
-numGenerations = 100
-populationSize = 500
+numIterations = 10
+numGenerations = 5000
+populationSize = 250
 numOfOffsprings = 100
 mutationRate = 0.6
 b = []
@@ -62,6 +62,7 @@ a = []
 
 def averageBSF(best):
     best2 = []
+    # for x in best:
     for i in range(len(best[0])):  # for each generation
         sum = 0
         for g in best:  # for each iteration
@@ -72,6 +73,7 @@ def averageBSF(best):
 
 def averageAFSF(avg):
     best2 = []
+    # for x in avg:
     for i in range(len(avg[0])):  # for each generation
         sum = 0
         for g in avg:  # for each iteration
@@ -83,7 +85,7 @@ def averageAFSF(avg):
 fitness = []
 win = pygame.display.set_mode((540, 600))
 pygame.display.set_caption("Sudoku Visualizer")
-board = Grid(9, 9, 540, 540, win, grid)
+board = Grid(9, 9, 450, 450, win, grid)
 redraw_window(win, board, grid)
 pygame.display.update()
 
@@ -110,8 +112,8 @@ best = averageBSF(b)
 aver = averageAFSF(a)
 generations = range(numGenerations)
 # print(len(aver), len(best), len(gen))
-plt.plot(generations, aver)
-plt.plot(generations, best)
+plt.plot(range(len(aver)), aver)
+plt.plot(range(len(best)), best)
 plt.legend(["Average Fitness", "Best Fitness"])
 plt.title('Fitness Vs Generations')
 plt.xlabel('Generations')
