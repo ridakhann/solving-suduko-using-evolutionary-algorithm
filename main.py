@@ -7,16 +7,10 @@ import sys
 from EA import Chromosome, Population, Evolution
 from sudoko import *
 from matplotlib import pyplot as plt
+import numpy as np
 
-grid = []   # Holds rows of base grid
-changeable = []   # Holds indices per row in 'grid' that are not fixed
-
-"""
-Processes a file and formulates a base grid, and keeps track of changeable indices.
-Parameters
-    file_path: Path to the file to be processed
-"""
-
+grid = []   
+changeable = []   
 
 def process_file(file_path):
 
@@ -49,10 +43,10 @@ def process_file(file_path):
     # print(grid)
 
 
-process_file("grid2.txt")
+process_file("grid3_27.txt")
 
-numIterations = 10
-numGenerations = 5000
+numIterations = 1
+numGenerations = 2500
 populationSize = 250
 numOfOffsprings = 100
 mutationRate = 0.6
@@ -104,10 +98,10 @@ for i in range(numIterations):
     fitness.append(solution[1])
     print(solution[1])
 
-
+plt.figure(num='med 2500 gen 10 it super mut graph')
 print(timeList)
 # averageTime = sum(timeList)
-
+print("Bestest Fitness", np.min(b))
 best = averageBSF(b)
 aver = averageAFSF(a)
 generations = range(numGenerations)

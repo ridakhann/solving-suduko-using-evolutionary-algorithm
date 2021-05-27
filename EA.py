@@ -174,7 +174,7 @@ class Evolution:
         sorted(self.population.population,
                key=lambda x: x[1], reverse=False)
         # population = []
-        for i in range(self.populationSize):
+        for i in range(self.populationSize//2):
             a = self.mutation2(self.population.population[i])
             self.population.population[i] = a
 
@@ -252,7 +252,7 @@ class Evolution:
         for i in range(self.numGenerations):
             generations.append(i)
             self.population.population = self.generation()
-            self.getAverage()
+            avg.append(self.getAverage())
             # if av > avg[-1]:
             #     avg.append(avg[-1])
             # else:
@@ -272,7 +272,7 @@ class Evolution:
             board = Grid(9, 9, 540, 540, win, bestInd[0].grid)
             redraw_window(win, board, grid)
             pygame.display.update()
-            if localCounter > 150:
+            if localCounter > 150 and np.min(best) != 0:
                 self.superMutation()
                 print("SUPER MUTATIONNNNNNNNNNNNNNNNNNNNNNNNNNN")
                 localCounter = 0
